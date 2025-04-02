@@ -1,0 +1,6 @@
+Sobe o docker:
+    docker-compose up -d
+Derruba o docker:
+    docker-compose down 
+Derruba o docker removendo os volumes:
+    docker-compose down -v
