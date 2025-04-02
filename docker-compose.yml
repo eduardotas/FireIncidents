@@ -54,6 +54,7 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./data:/usr/local/airflow/data
     command: webserver
 
   airflow-scheduler:
@@ -71,6 +72,7 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./data:/usr/local/airflow/data
     command: scheduler
 
   airflow-init:
@@ -87,6 +89,7 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./data:/usr/local/airflow/data
     entrypoint: ["/bin/bash", "-c", "airflow db init && airflow users create --username admin --password admin --firstname Eduardo --lastname Admin --role Admin --email admin@example.com"]
 
 volumes:

@@ -1,3 +1,5 @@
 .git
 .env
 airflow/logs/
+__pycache__/
+logs/
