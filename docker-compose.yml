@@ -1,6 +1,6 @@
 services:
   postgres_airflow:
-    image: postgres:15
+    image: postgres:13
     container_name: airflow_postgres
     restart: always
     environment:
@@ -26,18 +26,21 @@ services:
       - postgres_datalake_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
   
-  dbt:
-    image: ghcr.io/dbt-labs/dbt-postgres:latest
-    container_name: dbt
-    depends_on:
-      - postgres_datalake
-    environment:
-      DBT_PROFILES_DIR: /root/.dbt
-    volumes:
-      - ./dbt:/usr/app/dbt
+  # dbt:
+  #   image: ghcr.io/dbt-labs/dbt-postgres:latest
+  #   container_name: dbt
+  #   depends_on:
+  #     - postgres_datalake
+  #   environment:
+  #     DBT_PROFILES_DIR: /root/.dbt
+  #   volumes:
+  #     - ./dbt:/usr/app/dbt
 
   airflow-webserver:
-    image: apache/airflow:2.6.2
+    image: apache/airflow:2.10.5
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: airflow_webserver
     restart: always
     depends_on:
@@ -48,6 +51,7 @@ services:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@postgres_airflow/airflow
       AIRFLOW__CORE__FERNET_KEY: ''      
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
     ports:
       - "8080:8080"
     volumes:
@@ -58,7 +62,10 @@ services:
     command: webserver
 
   airflow-scheduler:
-    image: apache/airflow:2.6.2
+    image: apache/airflow:2.10.5
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: airflow_scheduler
     restart: always
     depends_on:
@@ -68,6 +75,7 @@ services:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@postgres_airflow/airflow
       AIRFLOW__CORE__FERNET_KEY: ''
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -76,7 +84,7 @@ services:
     command: scheduler
 
   airflow-init:
-    image: apache/airflow:2.6.2
+    image: apache/airflow:2.10.5
     container_name: airflow_init
     depends_on:
       - postgres_airflow
@@ -84,7 +92,7 @@ services:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@postgres_airflow/airflow
       AIRFLOW__CORE__FERNET_KEY: ''
-      AIRFLOW__CORE__LOAD_EXAMPLES: "False"      
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
