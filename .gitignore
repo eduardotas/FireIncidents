@@ -1,8 +1,9 @@
 .git
 .env
-airflow/logs/
 __pycache__/
-logs/
+
+airflow/logs/
+!airflow/logs/.gitkeep
 
 data/bronze/*
 !data/bronze/.gitkeep
