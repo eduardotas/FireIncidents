@@ -17,7 +17,7 @@ time = datetime.now().strftime("%H-%M")
 DIR_BRONZE = f"/usr/local/airflow/data/bronze/{date}/{time}"
 FILE_PATH = f"{DIR_BRONZE}/data.json"
 DATASET_ID = "wr8u-xric" 
-LIMIT = 50000  # Maximum allowed
+LIMIT = 50000 # Maximum allowed
 
 def extract_data():
     """
@@ -27,7 +27,11 @@ def extract_data():
     # Configuração do cliente Socrata
     client = Socrata("data.sfgov.org", None)
     offset = 0
+    first_batch = True
     
+    with open(FILE_PATH, "a", encoding="utf-8") as json_file:
+        json_file.write("[\n")  # start the JSON with [
+
     while True:
         try:
             log.info(f"Start offset:{offset}")
@@ -36,11 +40,17 @@ def extract_data():
             
             if not data:  # Se não houver mais dados, sair do loop
                 log.info(f"End offset:{offset} - No data to process")
-                break        
+                break
 
+            if not first_batch:
+                with open(FILE_PATH, "a", encoding="utf-8") as json_file:
+                    json_file.write(",\n")
+            else:
+                first_batch = False
+            
             with open(FILE_PATH, "a", encoding="utf-8") as json_file:
-                json.dump(data, json_file, ensure_ascii=False, indent=4)
-                json_file.write("\n")  # Ensure each batch is on a new line
+                json_data = json.dumps(data, ensure_ascii=False)[1:-1]
+                json_file.write(json_data)
 
             offset += LIMIT
             log.info(f"End offset:{offset}")
@@ -49,6 +59,9 @@ def extract_data():
             log.error(f"Error API: {e}")
             raise AirflowFailException(f"Execution failed: {str(e)}")
             break
+    
+    with open(FILE_PATH, "a", encoding="utf-8") as json_file:
+        json_file.write("\n]")  # Close the JSON with ]
 
 # DAG settings
 default_args = {
