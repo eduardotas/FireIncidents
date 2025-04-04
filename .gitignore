@@ -5,5 +5,8 @@ __pycache__/
 airflow/logs/*
 !airflow/logs/.gitkeep
 
+airflow/plugins/*
+!airflow/plugins/.gitkeep
+
 data/bronze/*
 !data/bronze/.gitkeep
