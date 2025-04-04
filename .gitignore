@@ -5,4 +5,4 @@ __pycache__/
 logs/
 
 data/bronze/*
-!meu_diretorio/
+!data/bronze/.gitkeep

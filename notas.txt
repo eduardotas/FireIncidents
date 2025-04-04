@@ -4,3 +4,13 @@ Derruba o docker:
     docker-compose down 
 Derruba o docker removendo os volumes:
     docker-compose down -v
+
+docker-compose up --build -d
+
+Test with https request:
+    time: 00:02:54
+    file_size: 1.97 GB
+
+Test with sodapy:
+    time: 00:02:34
+    file_size: 1.97 GB
