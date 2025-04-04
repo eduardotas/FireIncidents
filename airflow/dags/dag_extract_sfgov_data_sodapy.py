@@ -27,10 +27,7 @@ def extract_data():
     # Configuração do cliente Socrata
     client = Socrata("data.sfgov.org", None)
     offset = 0
-    first_batch = True
-    
-    with open(FILE_PATH, "a", encoding="utf-8") as json_file:
-        json_file.write("[\n")  # start the JSON with [
+    first_batch = True    
 
     while True:
         try:
@@ -41,17 +38,12 @@ def extract_data():
             if not data:  # Se não houver mais dados, sair do loop
                 log.info(f"End offset:{offset} - No data to process")
                 break
-
-            if not first_batch:
-                with open(FILE_PATH, "a", encoding="utf-8") as json_file:
-                    json_file.write(",\n")
-            else:
-                first_batch = False
             
             with open(FILE_PATH, "a", encoding="utf-8") as json_file:
-                json_data = json.dumps(data, ensure_ascii=False)[1:-1]
-                json_file.write(json_data)
-
+                for item in data:                
+                    json.dump(item, json_file, ensure_ascii=False)
+                    json_file.write("\n")  # Adiciona uma nova linha após cada registro  
+                    
             offset += LIMIT
             log.info(f"End offset:{offset}")
         
@@ -59,9 +51,6 @@ def extract_data():
             log.error(f"Error API: {e}")
             raise AirflowFailException(f"Execution failed: {str(e)}")
             break
-    
-    with open(FILE_PATH, "a", encoding="utf-8") as json_file:
-        json_file.write("\n]")  # Close the JSON with ]
 
 # DAG settings
 default_args = {
