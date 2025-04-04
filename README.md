@@ -19,6 +19,6 @@ I chose this method because the **Bronze, Silver, and Gold** layers ensure an or
 
 3: Montei dois processe de extração do dados um com cada metodo para ver qual era melhor.
 
-![extract_sfgov_data_https - Time](imgs\extract_sfgov_data_https - Time.png)
+![extract_sfgov_data_https - Time](imgs/extract_sfgov_data_https - Time.png)
 
-![extract_sfgov_data_https - Time](imgs\extract_sfgov_data_sodapy - Time.png)
+![extract_sfgov_data_https - Time](imgs/extract_sfgov_data_sodapy - Time.png)
