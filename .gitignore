@@ -3,3 +3,6 @@
 airflow/logs/
 __pycache__/
 logs/
+
+data/bronze/*
+!meu_diretorio/
