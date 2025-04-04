@@ -1,1 +1,4 @@
 sodapy
+pyspark
+pandas
+psycopg2-binary

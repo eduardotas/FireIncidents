@@ -25,3 +25,5 @@ I chose this method because the **Bronze, Silver, and Gold** layers ensure an or
 
 #### 3.3. extract_sfgov_data_sodapy
 ![extract_sfgov_data_https - Time](imgs/extract_sfgov_data_sodapy%20-%20Time.png)
+
+4. agora comecar a trabalhar com a tranformacao dos dados. intalar o pyspark
