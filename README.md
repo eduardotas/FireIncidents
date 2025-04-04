@@ -13,12 +13,14 @@ The **Bronze, Silver, and Gold** layers are used in data architecture to organiz
 I chose this method because the **Bronze, Silver, and Gold** layers ensure an organized data flow, making auditing and traceability easier.
 
 # How I did it and how I thought
-1: Montei o hambiente com Docker e Airflow.
+1. I set up the environment with Docker and Airflow.  
+2. I studied the API documentation and found that there are two extraction methods: HTTPS and Soday (Python library).  
+3. I created two data extraction processes, one with each method, to determine which was better.  
 
-2: Estudei os documentos da api e vi que tem dois metodos de extração, https e soday(Lib python)
+3.1. I chose extract_sfgov_data_sodapy because it has more stable execution times.
 
-3: Montei dois processe de extração do dados um com cada metodo para ver qual era melhor.
-
+#### 3.2.extract_sfgov_data_https
 ![extract_sfgov_data_https - Time](imgs/extract_sfgov_data_https%20-%20Time.png)
 
+#### 3.3. extract_sfgov_data_sodapy
 ![extract_sfgov_data_https - Time](imgs/extract_sfgov_data_sodapy%20-%20Time.png)
