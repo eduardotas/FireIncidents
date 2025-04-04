@@ -10,7 +10,12 @@ from airflow.exceptions import AirflowFailException
 from datetime import datetime, timedelta
 
 log = logging.getLogger("dag_extract_sfgov_data_sodapy_logs")
-TEMP_BRONZE = "/usr/local/airflow/data/bronze/data_sodapy.json"
+
+date = datetime.now().strftime("%Y-%m-%d")
+time = datetime.now().strftime("%H-%M")
+
+DIR_BRONZE = f"/usr/local/airflow/data/bronze/{date}/{time}"
+FILE_PATH = f"{DIR_BRONZE}/data.json"
 DATASET_ID = "wr8u-xric" 
 LIMIT = 50000  # Maximum allowed
 
@@ -18,6 +23,7 @@ def extract_data():
     """
     Extracts data from the Socrata API in batches of 50,000 records and appends them to a JSON file.
     """
+    os.makedirs(DIR_BRONZE, exist_ok=True)
     # Configuração do cliente Socrata
     client = Socrata("data.sfgov.org", None)
     offset = 0
@@ -32,7 +38,7 @@ def extract_data():
                 log.info(f"End offset:{offset} - No data to process")
                 break        
 
-            with open(TEMP_BRONZE, "a", encoding="utf-8") as json_file:
+            with open(FILE_PATH, "a", encoding="utf-8") as json_file:
                 json.dump(data, json_file, ensure_ascii=False, indent=4)
                 json_file.write("\n")  # Ensure each batch is on a new line
 

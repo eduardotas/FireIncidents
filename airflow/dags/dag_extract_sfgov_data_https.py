@@ -10,7 +10,11 @@ from datetime import datetime, timedelta
 
 log = logging.getLogger("dag_extract_sfgov_data_https_logs")
 
-TEMP_BRONZE = "/usr/local/airflow/data/bronze/data.json"
+date = datetime.now().strftime("%Y-%m-%d")
+time = datetime.now().strftime("%H-%M")
+
+DIR_BRONZE = f"/usr/local/airflow/data/bronze/{date}/{time}"
+FILE_PATH = f"{DIR_BRONZE}/data.json"
 API_URL = "https://data.sfgov.org/resource/wr8u-xric.json"
 LIMIT = 50000  # Maximum allowed
 
@@ -18,6 +22,7 @@ def extract_data():
     """
     Extracts data from the Socrata API in batches of 50,000 records and appends them to a JSON file.
     """
+    os.makedirs(DIR_BRONZE, exist_ok=True)
     offset = 0
     
     while True:
@@ -33,7 +38,7 @@ def extract_data():
                 break  # If there is no more data, exit the loop
             
             # Append data to the file in incremental steps
-            with open(TEMP_BRONZE, "a", encoding="utf-8") as json_file:
+            with open(FILE_PATH, "a", encoding="utf-8") as json_file:
                 json.dump(data, json_file, ensure_ascii=False, indent=4)
                 json_file.write("\n")  # Ensure each batch is on a new line
             log.info(f"End offset:{offset}")
@@ -44,7 +49,7 @@ def extract_data():
             raise AirflowFailException(f"Execution failed: {str(e)}")
             break
         
-    log.info(f"Data successfully appended to {TEMP_BRONZE}")
+    log.info(f"Data successfully appended to {FILE_PATH}")
 
 # DAG settings
 default_args = {
