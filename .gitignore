@@ -2,7 +2,7 @@
 .env
 __pycache__/
 
-airflow/logs/
+airflow/logs/*
 !airflow/logs/.gitkeep
 
 data/bronze/*
