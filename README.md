@@ -3,7 +3,7 @@
 ## Explanation
 The **Bronze, Silver, and Gold** layers are used in data architecture to organize and transform information:
 
-- **Bronze** 🟤 → Raw data, ingested directly from source systems, without processing.
+- **Bronze**  🟤 → Raw data, ingested directly from source systems, without processing (ideally stored in S3 or Blob Storage, but structured this way to avoid costs).
 - **Silver** ⚪ → Cleaned and transformed data, prepared for deeper analysis.
 - **Gold** 🟡 → Highly refined and aggregated data, optimized for BI and reporting.
 
