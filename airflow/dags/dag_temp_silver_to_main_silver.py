@@ -22,7 +22,7 @@ with DAG(
 ) as dag:
 
     temp_silver_to_main_silver = PythonOperator(
-        task_id="update_data",
+        task_id="temp_silver_to_main_silver",
         python_callable=temp_silver_to_main_silver,
     )
 

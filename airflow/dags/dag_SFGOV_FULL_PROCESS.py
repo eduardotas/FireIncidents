@@ -24,17 +24,17 @@ with DAG(
 ) as dag:
 
     extract_data_from_api = PythonOperator(
-        task_id="extract_sfgov_data_sodapy",
+        task_id="extract_data_from_api",
         python_callable=extract_data_from_api,
     )
 
     bronze_to_temp_silver = PythonOperator(
-        task_id="spark_transform_data",
+        task_id="bronze_to_temp_silver",
         python_callable=bronze_to_temp_silver,
     )
 
     temp_silver_to_main_silver = PythonOperator(
-        task_id="update_data",
+        task_id="temp_silver_to_main_silver",
         python_callable=temp_silver_to_main_silver,
     )
 

@@ -24,7 +24,7 @@ with DAG(
 ) as dag:
     
     extract_data_from_api = PythonOperator(
-        task_id="extract_sfgov_data_sodapy",
+        task_id="extract_data_from_api",
         python_callable=extract_data_from_api,
     )
 
