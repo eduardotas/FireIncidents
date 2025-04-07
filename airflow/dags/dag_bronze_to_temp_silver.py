@@ -22,7 +22,7 @@ with DAG(
 ) as dag:
 
     bronze_to_temp_silver = PythonOperator(
-        task_id="Spark_transform_data",
+        task_id="bronze_to_temp_silver",
         python_callable=bronze_to_temp_silver,
     )
 
