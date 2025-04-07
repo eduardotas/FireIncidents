@@ -45,7 +45,7 @@ def extract_data():
             offset += LIMIT
             
         except requests.exceptions.RequestException as e:
-            log.error(f"Error accessing API: {e}")
+            log.error(f"Error accessing API: {str(e)}")
             raise AirflowFailException(f"Execution failed: {str(e)}")
             break
         
