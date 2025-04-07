@@ -1,10 +1,7 @@
 from airflow.exceptions import AirflowFailException
-from sqlalchemy import create_engine, text
-import logging
 from includes.constants import  SCHEMA_SILVER, TEMP_TABLE, MAIN_TABLE, SCHEMA_GOLD, MV_DAY_NAME, MV_MONTH_NAME
-from includes.data_quality import DataQuality
 from includes.database import DBPostgres
-from datetime import datetime, timedelta
+import logging
 
 log = logging.getLogger(__name__)
 

@@ -1,14 +1,11 @@
-import json
-import logging
 from includes.constants import SPARK_POSTGRES_JAR, BASE_PATH_BRONZE, LATEST_FILE, \
     POSTGRES_PASSWORD, POSTGRES_NAME, POSTGRES_USER, POSTGRES_HOST, POSTGRES_PORT,\
     SCHEMA_SILVER, TEMP_TABLE, EXPECTED_BRONZE_SCHEMA
 from includes.data_quality import DataQuality
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, lit, concat, when, to_date, to_timestamp, lower, current_date, add_months
-from datetime import datetime, timedelta
-
 from airflow.exceptions import AirflowFailException
+import logging
 
 log = logging.getLogger(__name__)
 dq = DataQuality(process_name=__name__)
@@ -45,6 +42,12 @@ def bronze_to_temp_silver():
         df = df.filter(col("incident_date") >= five_years_ago)
     except Exception as e:
         raise AirflowFailException(f"Error while filtering date: {str(e)}")
+    
+    try:
+        log.info("Starting filter for supervisor_district...")                
+        df = df.filter(col("supervisor_district").isNotNull() & (col("supervisor_district") != ""))
+    except Exception as e:
+        raise AirflowFailException(f"Error while filtering supervisor_district: {str(e)}")
     
     try:        
         log.info("Starting filter for cities...")
