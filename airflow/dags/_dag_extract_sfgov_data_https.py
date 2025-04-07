@@ -8,7 +8,7 @@ from airflow.operators.python import PythonOperator
 from airflow.exceptions import AirflowFailException
 from datetime import datetime, timedelta
 
-log = logging.getLogger("dag_extract_sfgov_data_https_logs")
+log = logging.getLogger(__name__)
 
 date = datetime.now().strftime("%Y-%m-%d")
 time = datetime.now().strftime("%H-%M")

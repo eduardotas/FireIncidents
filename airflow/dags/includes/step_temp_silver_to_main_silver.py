@@ -3,7 +3,7 @@ import logging
 from includes.constants import POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_NAME, SCHEMA_SILVER, POSTGRES_USER, TEMP_TABLE, MAIN_TABLE
 from datetime import datetime, timedelta
 
-log = logging.getLogger("step_temp_silver_to_main_silver")
+log = logging.getLogger(__name__)
 
 def temp_silver_to_main_silver():    
     log.info("Opening connection to the database...")
