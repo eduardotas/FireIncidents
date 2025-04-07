@@ -6,7 +6,10 @@ POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 POSTGRES_NAME = os.environ.get("POSTGRES_NAME")
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
+SCHEMA_GOLD = "gold"
 SCHEMA_SILVER = "silver"
+MV_DAY_NAME = "daily_fire_incident_mv"
+MV_MONTH_NAME = "monthly_fire_incident_mv"
 TEMP_TABLE = "temp_incidents"
 MAIN_TABLE = "incidents"
 

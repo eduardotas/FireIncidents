@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from includes.step_extract_sfgov_data_sodapy import extract_data_from_api
 from includes.step_bronze_to_temp_silver import bronze_to_temp_silver
 from includes.step_temp_silver_to_main_silver import temp_silver_to_main_silver
+from includes.step_silver_to_gold import silver_to_gold
 
 # DAG settings
 default_args = {
@@ -38,4 +39,9 @@ with DAG(
         python_callable=temp_silver_to_main_silver,
     )
 
-    extract_data_from_api >> bronze_to_temp_silver >> temp_silver_to_main_silver
+    silver_to_gold = PythonOperator(
+        task_id="silver_to_gold",
+        python_callable=silver_to_gold,
+    )
+
+    extract_data_from_api >> bronze_to_temp_silver >> temp_silver_to_main_silver >> silver_to_gold
