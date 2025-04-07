@@ -16,7 +16,7 @@ Before running the project, make sure you have the following prerequisites insta
 
 2. **Build the project using Docker Compose**:
    ```bash
-   docker-compose -d build
+   docker-compose build
 
 3. **Access credentials**:
 
