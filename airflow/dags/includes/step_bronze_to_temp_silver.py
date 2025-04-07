@@ -2,7 +2,7 @@ import json
 import logging
 from includes.constants import SPARK_POSTGRES_JAR, BASE_PATH_BRONZE, LATEST_FILE, POSTGRES_PASSWORD, POSTGRES_NAME, POSTGRES_USER, POSTGRES_HOST, POSTGRES_PORT, SCHEMA_SILVER, TEMP_TABLE
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, lit, concat, when, to_date, to_timestamp
+from pyspark.sql.functions import col, lit, concat, when, to_date, to_timestamp, lower
 from datetime import datetime, timedelta
 
 from airflow.exceptions import AirflowFailException
@@ -23,14 +23,21 @@ def spark_transform():
             .config("spark.jars", SPARK_POSTGRES_JAR) \
             .getOrCreate()
     except Exception as e:
-        raise AirflowFailException(f"Error creating SparkSession: {e}")
+        raise AirflowFailException(f"Error creating SparkSession: {str(e)}")
     
     try:
         file_path = get_last_file()
         log.info(f"Reading file {file_path}...")
         df = spark.read.json(file_path)
     except Exception as e:
-        raise AirflowFailException(f"Error reading JSON file: {e}")
+        raise AirflowFailException(f"Error reading JSON file: {str(e)}")
+    
+    try:        
+        log.info("Starting filter for cities")
+        valid_cities = ["san francisco", "sf", "sfo"]        
+        df = df.filter(lower(col("city")).isin(valid_cities))
+    except Exception as e:
+        raise AirflowFailException(f"Error while filtering cities: {str(e)}")
     
     try:
         log.info("Adjusting 'point' column...")
@@ -44,7 +51,7 @@ def spark_transform():
             )
         )
     except Exception as e:
-        raise AirflowFailException(f"Error adjusting 'point' column: {e}")
+        raise AirflowFailException(f"Error adjusting 'point' column: {str(e)}")
     
     try:
         log.info("Reordering columns...")
@@ -60,7 +67,7 @@ def spark_transform():
         ]
         df = df.select(*orded_columns)
     except Exception as e:
-        raise AirflowFailException(f"Error reordering columns: {e}")
+        raise AirflowFailException(f"Error reordering columns: {str(e)}")
     
     try:
         log.info("Casting column types...")
@@ -86,7 +93,7 @@ def spark_transform():
            .withColumn("data_as_of", to_timestamp("data_as_of")) \
            .withColumn("data_loaded_at", to_timestamp("data_loaded_at"))
     except Exception as e:
-        raise AirflowFailException(f"Error casting column types: {e}")
+        raise AirflowFailException(f"Error casting column types: {str(e)}")
     
     try:
         jdbc_url = f"jdbc:postgresql://{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_NAME}"
@@ -106,4 +113,4 @@ def spark_transform():
         
         log.info("Done!")
     except Exception as e:
-        raise AirflowFailException(f"Error writing to the database: {e}")
+        raise AirflowFailException(f"Error writing to the database: {str(e)}")

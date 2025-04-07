@@ -27,3 +27,7 @@ I chose this method because the **Bronze, Silver, and Gold** layers ensure an or
 ![extract_sfgov_data_https - Time](imgs/extract_sfgov_data_sodapy%20-%20Time.png)
 
 4. agora comecar a trabalhar com a tranformacao dos dados. intalar o pyspark
+5 . Montei as tabelas necessarias no banco (silver.temp_incidents e silver.incidents)
+6 monntei o processo para inserir os dados na temp com spark
+    - filtrando os dados de sao francirso e realizando algumas tranformações.
+7. montei o processo de update dos dados (Montei semelahnte ao que seria no dbt)
