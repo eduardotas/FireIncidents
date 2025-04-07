@@ -1,13 +1,17 @@
 import json
 import logging
-from includes.constants import SPARK_POSTGRES_JAR, BASE_PATH_BRONZE, LATEST_FILE, POSTGRES_PASSWORD, POSTGRES_NAME, POSTGRES_USER, POSTGRES_HOST, POSTGRES_PORT, SCHEMA_SILVER, TEMP_TABLE
+from includes.constants import SPARK_POSTGRES_JAR, BASE_PATH_BRONZE, LATEST_FILE, \
+    POSTGRES_PASSWORD, POSTGRES_NAME, POSTGRES_USER, POSTGRES_HOST, POSTGRES_PORT,\
+    SCHEMA_SILVER, TEMP_TABLE, EXPECTED_BRONZE_SCHEMA
+from includes.data_quality import DataQuality
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, lit, concat, when, to_date, to_timestamp, lower
 from datetime import datetime, timedelta
 
 from airflow.exceptions import AirflowFailException
 
-log = logging.getLogger("step_bronze_to_temp_silver")
+log = logging.getLogger(__name__)
+dq = DataQuality(process_name=__name__)
 
 def get_last_file():
     with open(f"{BASE_PATH_BRONZE}{LATEST_FILE}", "r") as f:
@@ -28,7 +32,9 @@ def bronze_to_temp_silver():
     try:
         file_path = get_last_file()
         log.info(f"Reading file {file_path}...")
-        df = spark.read.json(file_path)
+        df = spark.read.json(file_path)        
+        dq.check_empty_dataframe(df)        
+        # dq.check_expected_schema(df, EXPECTED_BRONZE_SCHEMA) # TODO - Not working
     except Exception as e:
         raise AirflowFailException(f"Error reading JSON file: {str(e)}")
     
