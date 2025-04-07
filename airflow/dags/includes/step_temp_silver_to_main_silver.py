@@ -23,7 +23,9 @@ def temp_silver_to_main_silver():
         with engine.begin() as connection:
             connection.execute(text(f"""
                 INSERT INTO {SCHEMA_SILVER}.{MAIN_TABLE} AS t
-                SELECT * FROM {SCHEMA_SILVER}.{TEMP_TABLE} AS tmp
+                SELECT * ,
+                CURRENT_TIMESTAMP AS updated_at
+                FROM {SCHEMA_SILVER}.{TEMP_TABLE} AS tmp
                 ON CONFLICT (id)
                 DO UPDATE SET
                     incident_number = EXCLUDED.incident_number,
