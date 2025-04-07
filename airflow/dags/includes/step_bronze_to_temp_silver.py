@@ -35,6 +35,7 @@ def bronze_to_temp_silver():
         df = spark.read.json(file_path)        
         dq.check_empty_dataframe(df)        
         # dq.check_expected_schema(df, EXPECTED_BRONZE_SCHEMA) # TODO - Not working
+        df = dq.check_duplicates(df,["id"])
     except Exception as e:
         raise AirflowFailException(f"Error reading JSON file: {str(e)}")
     
