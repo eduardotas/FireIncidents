@@ -46,7 +46,7 @@ def extract_data():
             log.info(f"End offset:{offset}")
         
         except Exception as e:            
-            log.error(f"Error API: {e}")
+            log.error(f"Error API: {str(e)}")
             raise AirflowFailException(f"Execution failed: {str(e)}")
             break
     
