@@ -18,8 +18,7 @@ SPARK_POSTGRES_JAR = "/opt/spark/jars/postgresql-42.5.0.jar"
 
 LATEST_FILE = "latest_file.txt"
 
-EXPECTED_BRONZE_SCHEMA = StructType([
-    StructField("action_taken_other", StringType(), True),
+EXPECTED_BRONZE_SCHEMA = StructType([    
     StructField("action_taken_primary", StringType(), True),
     StructField("action_taken_secondary", StringType(), True),
     StructField("address", StringType(), True),
