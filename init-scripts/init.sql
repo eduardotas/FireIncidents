@@ -72,5 +72,6 @@ CREATE TABLE silver.incidents (
     neighborhood_district TEXT,
     point TEXT,
     data_as_of TIMESTAMP,
-    data_loaded_at TIMESTAMP
+    data_loaded_at TIMESTAMP,
+    updated_at TIMESTAMP
 );

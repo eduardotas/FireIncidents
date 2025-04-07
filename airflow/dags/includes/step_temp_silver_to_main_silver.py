@@ -49,6 +49,7 @@ def temp_silver_to_main_silver():
                 neighborhood_district = EXCLUDED.neighborhood_district,
                 point = EXCLUDED.point,
                 data_as_of = EXCLUDED.data_as_of,
-                data_loaded_at = EXCLUDED.data_loaded_at;
+                data_loaded_at = EXCLUDED.data_loaded_at,
+                updated_at = now();
         """))
         log.info("Update finished!")
