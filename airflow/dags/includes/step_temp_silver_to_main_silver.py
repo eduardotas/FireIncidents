@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 log = logging.getLogger("step_temp_silver_to_main_silver")
 
-def update_data():    
+def temp_silver_to_main_silver():    
     log.info("Opening connection to the database...")
     db_url = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_NAME}"
     engine = create_engine(db_url)

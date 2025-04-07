@@ -17,7 +17,7 @@ DIR_BRONZE = f"{BASE_PATH_BRONZE}{date}"
 FILE_PATH = f"{DIR_BRONZE}/{FILE_NAME}{time}{FILE_EXTENSION}"
 LIMIT = 50000 # Maximum allowed
 
-def extract_data():
+def extract_data_from_api():
     """
     Extracts data from the Socrata API in batches of 50,000 records and appends them to a JSON file.
     """

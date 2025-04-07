@@ -1,7 +1,7 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
-from includes.step_bronze_to_temp_silver import spark_transform
+from includes.step_bronze_to_temp_silver import bronze_to_temp_silver
 
 # DAG settings
 default_args = {
@@ -21,9 +21,9 @@ with DAG(
     tags=["extract", "sfgov"],
 ) as dag:
 
-    spark_transform = PythonOperator(
+    bronze_to_temp_silver = PythonOperator(
         task_id="Spark_transform_data",
-        python_callable=spark_transform,
+        python_callable=bronze_to_temp_silver,
     )
 
-    spark_transform
+    bronze_to_temp_silver

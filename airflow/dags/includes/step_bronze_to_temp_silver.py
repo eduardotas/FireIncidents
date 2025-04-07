@@ -15,7 +15,7 @@ def get_last_file():
     
     return latest_file
 
-def spark_transform():
+def bronze_to_temp_silver():
     try:
         spark = SparkSession.builder \
             .appName("IncidentsTransform") \

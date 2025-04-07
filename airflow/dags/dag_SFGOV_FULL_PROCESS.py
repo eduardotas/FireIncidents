@@ -1,9 +1,9 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.exceptions import AirflowFailException
 from datetime import datetime, timedelta
-
 from includes.step_extract_sfgov_data_sodapy import extract_data_from_api
+from includes.step_bronze_to_temp_silver import bronze_to_temp_silver
+from includes.step_temp_silver_to_main_silver import temp_silver_to_main_silver
 
 # DAG settings
 default_args = {
@@ -15,17 +15,27 @@ default_args = {
 }
 
 with DAG(
-    "dag_extract_sfgov_data_sodapy",
+    "dag_SFGOV_FULL_PROCESS",
     default_args=default_args,
-    description="DAG to extract data from the Socrata API daily",
+    description="DAG to execute the ETL of sfgov",    
     schedule_interval=timedelta(days=1),
     catchup=False,
-    tags=["extract", "sfgov"],
+    tags=["extract", "sfgov", "main"],
 ) as dag:
-    
+
     extract_data_from_api = PythonOperator(
         task_id="extract_sfgov_data_sodapy",
         python_callable=extract_data_from_api,
     )
 
-    extract_data_from_api
+    bronze_to_temp_silver = PythonOperator(
+        task_id="spark_transform_data",
+        python_callable=bronze_to_temp_silver,
+    )
+
+    temp_silver_to_main_silver = PythonOperator(
+        task_id="update_data",
+        python_callable=temp_silver_to_main_silver,
+    )
+
+    extract_data_from_api >> bronze_to_temp_silver >> temp_silver_to_main_silver

@@ -1,7 +1,7 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
-from includes.step_temp_silver_to_main_silver import update_data
+from includes.step_temp_silver_to_main_silver import temp_silver_to_main_silver
 
 # DAG settings
 default_args = {
@@ -21,9 +21,9 @@ with DAG(
     tags=["extract", "sfgov"],
 ) as dag:
 
-    update_data = PythonOperator(
+    temp_silver_to_main_silver = PythonOperator(
         task_id="update_data",
-        python_callable=update_data,
+        python_callable=temp_silver_to_main_silver,
     )
 
-    update_data
+    temp_silver_to_main_silver
