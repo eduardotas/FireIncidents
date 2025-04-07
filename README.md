@@ -30,4 +30,8 @@ I chose this method because the **Bronze, Silver, and Gold** layers ensure an or
 5 . Montei as tabelas necessarias no banco (silver.temp_incidents e silver.incidents)
 6 monntei o processo para inserir os dados na temp com spark
     - filtrando os dados de sao francirso e realizando algumas tranformações.
+    filtrando os dados por data
 7. montei o processo de update dos dados (Montei semelahnte ao que seria no dbt)
+8. apliquei alguns testes de qualidade dos dados, verificacao de duplicidade, dados nulos, verificacao de schema.
+9. add classe database
+
