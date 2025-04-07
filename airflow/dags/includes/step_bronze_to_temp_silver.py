@@ -5,7 +5,7 @@ from includes.constants import SPARK_POSTGRES_JAR, BASE_PATH_BRONZE, LATEST_FILE
     SCHEMA_SILVER, TEMP_TABLE, EXPECTED_BRONZE_SCHEMA
 from includes.data_quality import DataQuality
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, lit, concat, when, to_date, to_timestamp, lower
+from pyspark.sql.functions import col, lit, concat, when, to_date, to_timestamp, lower, current_date, add_months
 from datetime import datetime, timedelta
 
 from airflow.exceptions import AirflowFailException
@@ -40,7 +40,14 @@ def bronze_to_temp_silver():
         raise AirflowFailException(f"Error reading JSON file: {str(e)}")
     
     try:        
-        log.info("Starting filter for cities")
+        log.info("Starting filter for date...")
+        five_years_ago = add_months(current_date(), -12 * 5)  # Subtract 60 months (5 years)
+        df = df.filter(col("incident_date") >= five_years_ago)
+    except Exception as e:
+        raise AirflowFailException(f"Error while filtering date: {str(e)}")
+    
+    try:        
+        log.info("Starting filter for cities...")
         valid_cities = ["san francisco", "sf", "sfo"]        
         df = df.filter(lower(col("city")).isin(valid_cities))
     except Exception as e:
