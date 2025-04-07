@@ -8,7 +8,7 @@ from sodapy import Socrata
 
 from airflow.exceptions import AirflowFailException
 
-log = logging.getLogger("step_extract_sfgov_data_sodapy_logs")
+log = logging.getLogger(__name__)
 
 date = datetime.now().strftime("%Y-%m-%d")
 time = datetime.now().strftime("%H%M")
