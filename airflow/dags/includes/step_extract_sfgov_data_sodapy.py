@@ -2,16 +2,18 @@ import os
 import json
 import logging
 import requests
-from includes.constants import DATASET_ID, BASE_PATH_BRONZE, FILE_NAME, FILE_EXTENSION, LATEST_FILE
+from includes.constants import DATASET_ID, BASE_PATH_BRONZE, FILE_NAME, FILE_EXTENSION, LATEST_STATUS
+from includes.utils import LatestStatus
 from datetime import datetime, timedelta
 from sodapy import Socrata
-
 from airflow.exceptions import AirflowFailException
 
 log = logging.getLogger(__name__)
 
 date = datetime.now().strftime("%Y-%m-%d")
 time = datetime.now().strftime("%H%M")
+
+ls = LatestStatus()
 
 DIR_BRONZE = f"{BASE_PATH_BRONZE}{date}"
 FILE_PATH = f"{DIR_BRONZE}/{FILE_NAME}{time}{FILE_EXTENSION}"
@@ -49,6 +51,6 @@ def extract_data_from_api():
             log.error(f"Error API: {str(e)}")
             raise AirflowFailException(f"Execution failed: {str(e)}")
             break
+        
+    ls.update_json_last_update(FILE_PATH)
     
-    with open(f"{BASE_PATH_BRONZE}{LATEST_FILE}", "w") as f:
-            f.write(FILE_PATH)
