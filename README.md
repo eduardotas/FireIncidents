@@ -1,4 +1,4 @@
-### About the Project
+# About the Project
 
 This is a data engineering project developed with the goal of demonstrating technical knowledge in the field.  
 The pipeline performs an ETL process on the **Fire Incidents** dataset from the city of **San Francisco**, which is publicly available [here](https://data.sfgov.org/Public-Safety/Fire-Incidents/wr8u-xric/about_data).
@@ -19,8 +19,7 @@ The project uses the following technologies:
 
 The **Bronze, Silver, and Gold** layers are used in data architecture to organize and transform information:
 
-- **Br
-onze**  🟤 → Raw data, ingested directly from source systems, without processing (ideally stored in S3 or Blob Storage, but structured this way to avoid costs).
+- **Bronze**  🟤 → Raw data, ingested directly from source systems, without processing (ideally stored in S3 or Blob Storage, but structured this way to avoid costs).
 - **Silver** ⚪ → Cleaned and transformed data, prepared for deeper analysis.
 - **Gold** 🟡 → Highly refined and aggregated data, optimized for BI and reporting.
 
@@ -28,6 +27,19 @@ onze**  🟤 → Raw data, ingested directly from source systems, without proces
 **Bronze (raw) → Silver (processed) → Gold (ready for use).**
 ## Why This Method?
 I chose this method because the **Bronze, Silver, and Gold** layers ensure an organized data flow, making auditing and traceability easier.
+
+## Sample Data
+
+In the `z_sample_data` folder, you can find examples of the ingested data used in the project.
+
+- **incidents.csv** – Data saved in the **Silver layer**, already transformed and ready to be consumed by the **Gold layer**.
+
+- **daily_fire_incident_mv** – A **Materialized View** created in the **Gold layer** for data analyst consumption.  
+  This dataset is **aggregated by `supervisor_district`, `battalion`, and `incident_date` (daily)**, providing a summarized view of the fire incidents for analysis.
+
+- **monthly_fire_incident_mv** – A **Materialized View** created in the **Gold layer** for data analyst consumption.  
+  This dataset is **aggregated by `supervisor_district`, `battalion`, and `incident_date` (monthly)**, providing a summarized view of the fire incidents for analysis.
+
 
 # How I did it and how I thought
 ### Step 1: Setting Up the Environment
