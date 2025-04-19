@@ -19,7 +19,11 @@ DATASET_ID = "wr8u-xric"
 BASE_PATH_BRONZE = "/usr/local/airflow/data/bronze/"
 SPARK_POSTGRES_JAR = "/opt/spark/jars/postgresql-42.5.0.jar"
 
-LATEST_FILE = "latest_file.txt"
+LATEST_STATUS = "latest_status.json"
+LATEST_STATUS_STRUCT = {
+                "last_file": "",
+                "last_update": ""
+            }
 
 EXPECTED_BRONZE_SCHEMA = StructType([
     StructField("action_taken_other", StringType(), True),
