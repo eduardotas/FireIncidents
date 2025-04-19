@@ -1,27 +1,22 @@
-# Prerequisites
+### About the Project
 
-Before running the project, make sure you have the following prerequisites installed:
+This is a data engineering project developed with the goal of demonstrating technical knowledge in the field.  
+The pipeline performs an ETL process on the **Fire Incidents** dataset from the city of **San Francisco**, which is publicly available [here](https://data.sfgov.org/Public-Safety/Fire-Incidents/wr8u-xric/about_data).
 
-1. **Docker**: [Install Docker](https://www.docker.com/get-started)
-2. **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/)
+The project uses the following technologies:
 
-## Setup Instructions
+- **Docker** – Used to create and manage the project environment.  
+- **Python** – Responsible for data extraction from the API and update processes.  
+- **PySpark** – Used for data processing and transformation.  
+- **Airflow** – Orchestrates the ETL pipeline.  
+- **PostgreSQL** – Serves as the data warehouse.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/eduardotas/FireIncidents.git
+**Access credentials**:
 
-2. **Build the project using Docker Compose**:
-   ```bash
-   docker-compose -d build
-
-3. **Access credentials**:
-
-    The access credentials can be found in the **.env** file located in the root directory of the project.
+   The access credentials can be found in the **.env** file located in the root directory of the project.
 
 # Data Architecture: Bronze, Silver, and Gold Layers
 
-## Explanation
 The **Bronze, Silver, and Gold** layers are used in data architecture to organize and transform information:
 
 - **Br
@@ -57,13 +52,17 @@ Additionally, I opted for a **batch processing method**, extracting **50,000 rec
 #### sodapy
 ![extract_sfgov_data_https - Time](imgs/extract_sfgov_data_sodapy%20-%20Time.png)
 
+- **The extraction**: The extraction process loads the data into the **bronze layer**, which is organized into folders—**one folder per day**. Inside each folder, JSON files are named as `"data0000.json"`, where `0000` represents the **hour of extraction**.
+- **Update Control and Last File Tracking**: To identify when the last update occurred and which was the last file ingested, I created a JSON file named **`latest_status.json`**.  
+This file stores both pieces of information, which are read and updated dynamically throughout the process.
+
 ### Step 3: Data Transformation and Cleaning
 
 In Step 3, I transformed and cleaned the JSON data using **PySpark**. The main actions performed were:
 
 - **Quality Validation**: Ensured the file wasn't empty and the schema was correct.
 - **Handling Duplicates**: Removed duplicate records based on the **"ID"** identifier.
-- **Filtering**: Retained only records from the last 5 years and from **San Francisco**.
+- **Filtering**: The process checks the last update date and filters the data using the `incident_date` column. If no previous update exists, it defaults to retrieving records from the last 5 years and from **San Francisco**.
 - **Data Cleaning**: Removed records with a null or empty **`supervisor_district`**.
 - **Adjustments and Reordering**: Adjusted the **`point`** column, casted columns, and reordered them according to the standard.
 - **Storage**: The transformed data was inserted into a temporary table in the **Silver** layer, **silver.temp_incidents**.

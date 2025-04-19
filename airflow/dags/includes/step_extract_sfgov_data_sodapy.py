@@ -52,5 +52,4 @@ def extract_data_from_api():
             raise AirflowFailException(f"Execution failed: {str(e)}")
             break
         
-    ls.update_json_last_update(FILE_PATH)
-    
+    ls.update_json_last_file(FILE_PATH)    

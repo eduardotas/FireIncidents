@@ -10,4 +10,3 @@ airflow/plugins/*
 
 data/bronze/*
 !data/bronze/.gitkeep
-!data/bronze/latest_status.json
