@@ -13,7 +13,7 @@ The project uses the following technologies:
 
 **Access credentials**:
 
-   The access credentials can be found in the **.env** file located in the root directory of the project.
+The access credentials can be found in the **.env** file located in the root directory of the project.
 
 # Data Architecture: Bronze, Silver, and Gold Layers
 
