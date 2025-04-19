@@ -25,10 +25,10 @@ def bronze_to_temp_silver():
     try:
         file_path = ls.get_last_file()
         log.info(f"Reading file {file_path}...")
-        df = spark.read.json(file_path)        
-        dq.check_empty_dataframe(df)        
-        dq.check_expected_schema(df, EXPECTED_BRONZE_SCHEMA)
-        df = dq.check_duplicates(df,["id"])
+        df = spark.read.json(file_path)               
+        dq.check_empty_dataframe(df)                
+        dq.check_expected_schema(df, EXPECTED_BRONZE_SCHEMA)        
+        df = dq.check_duplicates(df,["id"])        
     except Exception as e:
         raise AirflowFailException(f"Error reading JSON file: {str(e)}")
     
@@ -40,7 +40,7 @@ def bronze_to_temp_silver():
             five_years_ago = add_months(current_date(), -12 * 5)  # Subtract 60 months (5 years)
             df = df.filter(col("incident_date") >= five_years_ago)
         else:
-            df = df.filter(col("incident_date") >= last_update)
+            df = df.filter(col("incident_date") >= last_update)        
     except Exception as e:
         raise AirflowFailException(f"Error while filtering date: {str(e)}")
     
@@ -83,33 +83,33 @@ def bronze_to_temp_silver():
             "property_use", "supervisor_district", "neighborhood_district", "point", 
             "data_as_of", "data_loaded_at"
         ]
-        df = df.select(*orded_columns)
+        df = df.select(*orded_columns)        
     except Exception as e:
         raise AirflowFailException(f"Error reordering columns: {str(e)}")
     
     try:
         log.info("Casting column types...")
         df = df.withColumn("incident_number", col("incident_number").cast("long")) \
-           .withColumn("exposure_number", col("exposure_number").cast("int")) \
-           .withColumn("id", col("id").cast("long")) \
-           .withColumn("call_number", col("call_number").cast("long")) \
-           .withColumn("incident_date", to_date("incident_date")) \
-           .withColumn("alarm_dttm", to_timestamp("alarm_dttm")) \
-           .withColumn("arrival_dttm", to_timestamp("arrival_dttm")) \
-           .withColumn("close_dttm", to_timestamp("close_dttm")) \
-           .withColumn("suppression_units", col("suppression_units").cast("int")) \
-           .withColumn("suppression_personnel", col("suppression_personnel").cast("int")) \
-           .withColumn("ems_units", col("ems_units").cast("int")) \
-           .withColumn("ems_personnel", col("ems_personnel").cast("int")) \
-           .withColumn("other_units", col("other_units").cast("int")) \
-           .withColumn("other_personnel", col("other_personnel").cast("int")) \
-           .withColumn("fire_fatalities", col("fire_fatalities").cast("int")) \
-           .withColumn("fire_injuries", col("fire_injuries").cast("int")) \
-           .withColumn("civilian_fatalities", col("civilian_fatalities").cast("int")) \
-           .withColumn("civilian_injuries", col("civilian_injuries").cast("int")) \
-           .withColumn("number_of_alarms", col("number_of_alarms").cast("int")) \
-           .withColumn("data_as_of", to_timestamp("data_as_of")) \
-           .withColumn("data_loaded_at", to_timestamp("data_loaded_at"))
+            .withColumn("exposure_number", col("exposure_number").cast("int")) \
+            .withColumn("id", col("id").cast("long")) \
+            .withColumn("call_number", col("call_number").cast("long")) \
+            .withColumn("incident_date", to_date("incident_date")) \
+            .withColumn("alarm_dttm", to_timestamp("alarm_dttm")) \
+            .withColumn("arrival_dttm", to_timestamp("arrival_dttm")) \
+            .withColumn("close_dttm", to_timestamp("close_dttm")) \
+            .withColumn("suppression_units", col("suppression_units").cast("int")) \
+            .withColumn("suppression_personnel", col("suppression_personnel").cast("int")) \
+            .withColumn("ems_units", col("ems_units").cast("int")) \
+            .withColumn("ems_personnel", col("ems_personnel").cast("int")) \
+            .withColumn("other_units", col("other_units").cast("int")) \
+            .withColumn("other_personnel", col("other_personnel").cast("int")) \
+            .withColumn("fire_fatalities", col("fire_fatalities").cast("int")) \
+            .withColumn("fire_injuries", col("fire_injuries").cast("int")) \
+            .withColumn("civilian_fatalities", col("civilian_fatalities").cast("int")) \
+            .withColumn("civilian_injuries", col("civilian_injuries").cast("int")) \
+            .withColumn("number_of_alarms", col("number_of_alarms").cast("int")) \
+            .withColumn("data_as_of", to_timestamp("data_as_of")) \
+            .withColumn("data_loaded_at", to_timestamp("data_loaded_at"))
     except Exception as e:
         raise AirflowFailException(f"Error casting column types: {str(e)}")
     
@@ -128,6 +128,7 @@ def bronze_to_temp_silver():
             .mode("overwrite") \
             .option("truncate", "true") \
             .jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=properties)
+                
         ls.update_json_last_update()
         log.info("Done!")
     except Exception as e:
